@@ -1,6 +1,6 @@
-# 제주 IP 클럽 (Vite + Supabase Auth)
+# 제주 사진 클럽 (Vite + Supabase Auth)
 
-돌하르방·감귤·한라산 등 제주 IP를 소개하는 사이트. Supabase 이메일 회원가입/로그인, 로그아웃, 내 정보(닉네임 변경)를 제공합니다.
+제주의 풍경과 순간을 사진으로 모아 보여주는 사이트. Supabase 이메일 회원가입/로그인, 로그아웃, 내 정보(닉네임 변경)를 제공합니다.
 
 ## 1. Supabase 값 확인
 1. Supabase 대시보드 → 프로젝트 선택 → **Project Settings → API** (또는 상단 **Connect** 버튼)

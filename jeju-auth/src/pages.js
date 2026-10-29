@@ -15,19 +15,30 @@ const korean = (err) => {
   return ERRORS[err?.message] || err?.message || '알 수 없는 오류가 발생했어요.'
 }
 
-const IP = [
-  { id: 'hareubang', name: '돌하르방', tag: '제주의 수호신', text: '큼직한 코와 부리부리한 눈. 마을 어귀를 지키던 돌 할아버지는 제주를 대표하는 캐릭터예요.' },
-  { id: 'mikan', name: '감귤', tag: '제주의 달콤함', text: '겨울이면 온 섬이 주황빛. 한 알 한 알 손으로 따는 제주 감귤이 가장 사랑받는 IP예요.' },
-  { id: 'hallasan', name: '한라산', tag: '제주의 중심', text: '섬 한가운데 우뚝 솟은 백록담의 산. 제주의 모든 이야기가 이곳에서 시작돼요.' },
-  { id: 'sunrise', name: '성산일출봉', tag: '제주의 아침', text: '바다 위로 솟은 분화구, 수면 위로 떠오르는 해돋이는 제주의 상징이에요.' },
-  { id: 'canola', name: '유채꽃', tag: '제주의 봄', text: '노란 물결이 돌담을 따라 번지는 봄. 제주 사진의 단골 배경이에요.' },
+// size: l = 2x2, w = 2x1, 나머지 1x1 (public/images/<id>.jpg, scripts/fetch-pixabay.mjs 가 받아옴)
+const PHOTOS = [
+  { id: 'sunrise', name: '성산일출봉', tag: '제주의 아침', size: 'l' },
+  { id: 'hyeopjae', name: '협재해변', tag: '에메랄드빛 바다' },
+  { id: 'udo', name: '우도', tag: '작은 섬' },
+  { id: 'seopjikoji', name: '섭지코지', tag: '바다로 뻗은 곶' },
+  { id: 'cherry', name: '벚꽃', tag: '제주의 봄' },
+  { id: 'canola', name: '유채꽃', tag: '노란 물결', size: 'w' },
+  { id: 'hareubang', name: '돌하르방', tag: '제주의 수호신' },
+  { id: 'stonewall', name: '돌담', tag: '바람을 막는 길' },
+  { id: 'hallasan', name: '한라산', tag: '제주의 중심', size: 'l' },
+  { id: 'cheonjiyeon', name: '천지연폭포', tag: '서귀포' },
+  { id: 'yongmeori', name: '용머리해안', tag: '퇴적암 절벽' },
+  { id: 'mikan', name: '감귤', tag: '제주의 달콤함', size: 'w' },
+  { id: 'olle', name: '올레길', tag: '걷기 좋은 길' },
+  { id: 'horse', name: '제주 말', tag: '초원의 풍경' },
+  { id: 'snow', name: '겨울 한라산', tag: '설경' },
+  { id: 'sunset', name: '제주의 노을', tag: '하루의 끝' },
 ]
 
-const card = (c) => `
-  <article class="card">
-    <div class="pic" style="--img:url(/images/${c.id}.jpg)"></div>
-    <div class="body"><span class="tag">${c.tag}</span><h3>${c.name}</h3><p>${c.text}</p></div>
-  </article>`
+const photo = (c) => `
+  <figure class="ph ${c.size || ''}" role="img" aria-label="${c.name}" style="--img:url(/images/${c.id}.jpg)">
+    <figcaption><span class="tag">${c.tag}</span><b>${c.name}</b></figcaption>
+  </figure>`
 
 const msg = (root) => root.querySelector('.msg')
 function show(root, text, kind = 'err') {
@@ -46,9 +57,9 @@ const home = {
   view: ({ session }) => `
     <section class="hero">
       <div class="hero-in">
-        <p class="eyebrow">JEJU · 돌 · 바람 · 감귤</p>
-        <h1>제주의 이야기를<br />가장 귀엽게 만나다</h1>
-        <p class="lead">돌하르방부터 감귤까지, 제주를 대표하는 캐릭터와 풍경을 모아둔 팬 클럽이에요.</p>
+        <p class="eyebrow">JEJU · PHOTO CLUB</p>
+        <h1>제주의 순간을<br />사진으로 모아요</h1>
+        <p class="lead">한라산부터 바다, 돌담, 감귤밭까지. 제주의 풍경을 사진으로 나누는 클럽이에요.</p>
         <div class="cta">${
           session
             ? '<a class="btn big" href="/shop" data-link>굿즈 상점 가기</a><a class="btn big ghost" href="/my" data-link>내 정보 보기</a>'
@@ -57,8 +68,8 @@ const home = {
       </div>
     </section>
     <section class="wrap">
-      <h2>제주 IP 모아보기</h2>
-      <div class="grid">${IP.map(card).join('')}</div>
+      <h2>제주 사진 모아보기</h2>
+      <div class="mosaic">${PHOTOS.map(photo).join('')}</div>
     </section>`,
 }
 
@@ -151,7 +162,7 @@ const my = {
       </form>
       <div class="members">
         <h2>🍊 멤버 전용 소식</h2>
-        <p>로그인한 회원에게만 보이는 영역이에요. 곧 제주 IP 굿즈와 이벤트 소식이 올라와요!</p>
+        <p>로그인한 회원에게만 보이는 영역이에요. 곧 제주 사진 굿즈와 이벤트 소식이 올라와요!</p>
       </div>
     </section>`
   },

@@ -32,6 +32,17 @@ const targets = [
   { file: 'hallasan', q: 'hallasan', alt: 'jeju mountain' },
   { file: 'sunrise', q: 'seongsan ilchulbong', alt: 'jeju sunrise' },
   { file: 'canola', q: 'jeju canola flowers', alt: 'rapeseed field spring' },
+  { file: 'hyeopjae', q: 'hyeopjae beach', alt: 'jeju beach' },
+  { file: 'udo', q: 'udo island jeju', alt: 'jeju island sea' },
+  { file: 'seopjikoji', q: 'seopjikoji', alt: 'jeju lighthouse coast' },
+  { file: 'cherry', q: 'jeju cherry blossom', alt: 'korea cherry blossom' },
+  { file: 'stonewall', q: 'jeju stone wall', alt: 'basalt stone wall' },
+  { file: 'cheonjiyeon', q: 'cheonjiyeon waterfall', alt: 'jeju waterfall' },
+  { file: 'yongmeori', q: 'yongmeori coast', alt: 'jeju coast cliff' },
+  { file: 'olle', q: 'jeju olle trail', alt: 'jeju coastal path' },
+  { file: 'horse', q: 'jeju horse', alt: 'horse pasture island' },
+  { file: 'snow', q: 'hallasan snow', alt: 'jeju winter snow' },
+  { file: 'sunset', q: 'jeju sunset', alt: 'korea sunset sea' },
 ]
 
 const outDir = join(root, 'public', 'images')
