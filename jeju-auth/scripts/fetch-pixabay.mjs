@@ -16,11 +16,13 @@ function loadEnv() {
 }
 loadEnv()
 
-const key = process.env.PIXABAY_API_KEY
+const key = (process.env.PIXABAY_API_KEY || '').trim().replace(/^["']|["']$/g, '')
 if (!key) {
   console.error('PIXABAY_API_KEY 가 없습니다. .env 에 추가하거나 환경변수로 전달하세요.')
   process.exit(1)
 }
+// 보통 Pixabay 키는 "숫자-영문숫자" 형태 (약 33자). 값 자체는 출력하지 않는다.
+console.log(`PIXABAY_API_KEY 길이: ${key.length}자 (형식 ${/^\d+-[0-9a-f]+$/i.test(key) ? '정상' : '이상함'})`)
 
 // 파일명 -> 검색어 (결과가 없으면 fallback 검색어 사용)
 const targets = [
