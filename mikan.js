@@ -11,16 +11,20 @@ const pick = a => a[Math.floor(Math.random() * a.length)];
 const hash = n => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
 
 // ───────────────────────── 화면/투영 ─────────────────────────
-let W, H, HZ, UNIT;
+let W, H, HZ, UNIT, UI = 1;
 function resize() {
-  const dpr = Math.min(2, devicePixelRatio || 1);
-  W = innerWidth; H = innerHeight;
-  cv.width = W * dpr; cv.height = H * dpr;
+  const dpr = Math.min(2, devicePixelRatio || 1), vv = window.visualViewport;
+  W = Math.floor(vv ? vv.width : innerWidth); H = Math.floor(vv ? vv.height : innerHeight);
+  cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   HZ = H * 0.36;
   UNIT = Math.min(W * 0.115, H * 0.2);
+  UI = clamp(Math.min(W / 760, H / 560), 0.62, 2.2);
+  const side = document.querySelector('.side'); if (side) side.style.top = Math.round(128 * UI) + 'px';
 }
-addEventListener('resize', resize); resize();
+addEventListener('resize', resize); addEventListener('orientationchange', () => setTimeout(resize, 200));
+if (window.visualViewport) visualViewport.addEventListener('resize', resize);
+resize();
 
 const K = 7, PD = 1.6;                       // 원근 상수 / 플레이어 거리
 const sc = d => K / (d + K);
@@ -734,10 +738,13 @@ function render() {
   for (const p of parts) { ctx.globalAlpha = clamp(p.life / p.max * 1.5, 0, 1); if (p.s) { ctx.fillStyle = p.c; ctx.fillRect(p.x - p.r, p.y - 0.5, p.r * 2, 1.5); ctx.fillRect(p.x - 0.5, p.y - p.r, 1.5, p.r * 2); circ(p.x, p.y, p.r * 0.6, p.c); } else circ(p.x, p.y, p.r, p.c); }
   ctx.globalAlpha = 1;
   if (P.spd > S.def.base * 1.4 || P.dash > 0) { ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 2; for (let i = 0; i < 14; i++) { const a = hash(i + Math.floor(t * 20)) * TAU, r0 = Math.min(W, H) * 0.4, r1 = r0 + 90; ctx.beginPath(); ctx.moveTo(W / 2 + Math.cos(a) * r0 * 1.3, H * 0.5 + Math.sin(a) * r0); ctx.lineTo(W / 2 + Math.cos(a) * r1 * 1.4, H * 0.5 + Math.sin(a) * r1); ctx.stroke(); } }
-  for (const f of texts) { ctx.globalAlpha = clamp(f.life * 2, 0, 1); txt(f.s, f.x, f.y, f.size, f.col, 'center', '#5a2a00'); }
+  for (const f of texts) { ctx.globalAlpha = clamp(f.life * 2, 0, 1); txt(f.s, f.x, f.y, f.size * UI, f.col, 'center', '#5a2a00'); }
   ctx.globalAlpha = 1; ctx.restore();
+  // UI는 화면 크기에 비례해 확대/축소 (가상 해상도로 그린 뒤 ctx 스케일)
+  const W0 = W, H0 = H; ctx.save(); ctx.scale(UI, UI); W = W0 / UI; H = H0 / UI;
   if (S.state === 'title') drawTitle(); else { drawHUD(); if (S.state === 'clear') drawClear(); if (S.state === 'over') drawOver();
     if (S.state === 'paused') { ctx.fillStyle = 'rgba(20,0,40,.55)'; ctx.fillRect(0, 0, W, H); txt('⏸ 일시정지', W / 2, H / 2 - 20, 56, '#fff', 'center', '#4a1a6a'); txt('P 또는 ESC로 계속하기', W / 2, H / 2 + 40, 24, '#ffe9b0', 'center', null); } }
+  W = W0; H = H0; ctx.restore();
 }
 
 // ───────────────────────── 루프 ─────────────────────────
