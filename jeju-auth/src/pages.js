@@ -24,7 +24,7 @@ const IP = [
 
 const card = (c) => `
   <article class="card">
-    <div class="pic" style="background-image:url(/images/${c.id}.jpg)"></div>
+    <div class="pic" style="--img:url(/images/${c.id}.jpg)"></div>
     <div class="body"><span class="tag">${c.tag}</span><h3>${c.name}</h3><p>${c.text}</p></div>
   </article>`
 
