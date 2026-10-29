@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>제주도 여행</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #0a2a40; overflow: hidden; color: #fff; font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; }
+  canvas { display: block; }
+  .glass { background: rgba(8,28,44,.58); border: 1px solid rgba(255,255,255,.16); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  #top { position: fixed; left: 16px; top: 14px; display: flex; gap: 10px; align-items: center; }
+  #top a { color: #fff; text-decoration: none; padding: 7px 14px; border-radius: 999px; font-size: 13px; }
+  #top h1 { margin: 0; font-weight: 300; font-size: 18px; letter-spacing: .16em; text-shadow: 0 1px 10px rgba(0,0,0,.5); }
+  #spots { position: fixed; right: 14px; top: 14px; display: flex; flex-direction: column; gap: 6px; max-width: 150px; }
+  #spots button, #tour { all: unset; cursor: pointer; padding: 7px 12px; border-radius: 12px; font-size: 13px; text-align: center; }
+  #spots button:hover, #tour:hover { background: rgba(60,130,180,.55); }
+  #spots button.on { background: rgba(255,150,70,.45); border-color: rgba(255,180,110,.7); }
+  #card { position: fixed; left: 16px; bottom: 76px; max-width: min(420px, calc(100% - 32px)); padding: 14px 18px; border-radius: 16px; transition: opacity .6s, transform .6s; }
+  #card.hide { opacity: 0; transform: translateY(8px); }
+  #card h2 { margin: 0 0 4px; font-size: 20px; font-weight: 500; }
+  #card p { margin: 0; font-size: 14px; line-height: 1.55; opacity: .88; }
+  #card small { display: block; margin-top: 6px; opacity: .55; font-size: 12px; }
+  #bar { position: fixed; left: 16px; bottom: 16px; display: flex; gap: 10px; align-items: center; }
+  #tour { padding: 10px 20px; border-radius: 999px; font-size: 14px; background: linear-gradient(135deg, #ff9a44, #e2527a); border: none; }
+  #hint { font-size: 12px; opacity: .65; }
+  .label { color: #fff; font-size: 13px; padding: 3px 9px; border-radius: 999px; background: rgba(8,28,44,.6); border: 1px solid rgba(255,255,255,.25); white-space: nowrap; pointer-events: none; transform: translateY(-26px); }
+  #loading { position: fixed; inset: 0; display: grid; place-items: center; background: #0a2a40; letter-spacing: .1em; font-size: 14px; transition: opacity .8s; }
+  @media (max-width: 640px) { #spots { flex-direction: row; flex-wrap: wrap; max-width: none; left: 14px; right: 14px; top: 56px; } #hint { display: none; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="loading">제주도로 떠나는 중…</div>
+<div id="top"><a class="glass" href="index.html">← 처음으로</a><h1>제주도 여행</h1></div>
+<div id="spots"></div>
+<div id="card" class="glass hide"><h2></h2><p></p><small></small></div>
+<div id="bar"><button id="tour" class="glass">⏸ 여행 일시정지</button><span id="hint">드래그해서 직접 둘러보고, 버튼으로 여행을 이어가세요</span></div>
+<script type="module" src="jeju.js"></script>
+</body>
+</html>
