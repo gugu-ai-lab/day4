@@ -27,7 +27,8 @@ console.log(`PIXABAY_API_KEY 길이: ${key.length}자 (형식 ${/^\d+-[0-9a-f]+$
 // 파일명 -> 검색어 (결과가 없으면 fallback 검색어 사용)
 const targets = [
   { file: 'hero', q: 'jeju island', alt: 'korea island coast' },
-  { file: 'hareubang', q: 'dol hareubang', alt: 'jeju stone statue' },
+  // qs: 순서대로 검색, must: 태그에 이 패턴이 있는 결과만 사용 (엉뚱한 사진 방지)
+  { file: 'hareubang', qs: ['dolhareubang', 'dol hareubang', 'harubang', 'hareubang', 'jeju stone statue'], must: /hareubang|harubang|(?=.*jeju)(?=.*(statue|stone))/i },
   { file: 'mikan', q: 'tangerine orchard', alt: 'mandarin orange' },
   { file: 'hallasan', q: 'hallasan', alt: 'jeju mountain' },
   { file: 'sunrise', q: 'seongsan ilchulbong', alt: 'jeju sunrise' },
@@ -53,7 +54,7 @@ async function search(q) {
   const url = new URL('https://pixabay.com/api/')
   url.search = new URLSearchParams({
     key, q, image_type: 'photo', orientation: 'horizontal',
-    safesearch: 'true', order: 'popular', per_page: '5',
+    safesearch: 'true', order: 'popular', per_page: '20',
   })
   const res = await fetch(url)
   if (!res.ok) throw new Error(`Pixabay API ${res.status}: ${await res.text()}`)
@@ -61,15 +62,17 @@ async function search(q) {
 }
 
 for (const t of targets) {
-  let hits = await search(t.q)
-  if (!hits.length) hits = await search(t.alt)
-  const hit = hits[0]
-  if (!hit) { console.warn(`✗ ${t.file}: 결과 없음`); continue }
+  let hit
+  for (const q of t.qs || [t.q, t.alt]) {
+    hit = (await search(q)).find((h) => !t.must || t.must.test(h.tags))
+    if (hit) break
+  }
+  if (!hit) { console.warn(`✗ ${t.file}: 조건에 맞는 결과 없음`); continue }
   const img = await fetch(hit.largeImageURL)
   if (!img.ok) { console.warn(`✗ ${t.file}: 다운로드 실패`); continue }
   writeFileSync(join(outDir, `${t.file}.jpg`), Buffer.from(await img.arrayBuffer()))
   credits[t.file] = { user: hit.user, page: hit.pageURL }
-  console.log(`✓ ${t.file}.jpg  (${t.q} · by ${hit.user})`)
+  console.log(`✓ ${t.file}.jpg  (tags: ${hit.tags} · by ${hit.user})`)
 }
 
 writeFileSync(join(outDir, 'credits.json'), JSON.stringify(credits, null, 2))
