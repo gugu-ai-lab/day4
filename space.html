@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Space</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #01020a; overflow: hidden; font-family: -apple-system, "Apple SD Gothic Neo", sans-serif; color: #fff; }
+  canvas { display: block; }
+  #hud { position: fixed; left: 16px; bottom: 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  #hud button { all: unset; cursor: pointer; padding: 8px 14px; border-radius: 999px; font-size: 13px; background: rgba(8,18,40,.6);
+                border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  #hud button:hover { background: rgba(40,70,140,.6); }
+  #hud button.on { background: rgba(255,140,60,.35); border-color: rgba(255,170,100,.6); }
+  #tip { position: fixed; right: 16px; bottom: 20px; font-size: 12px; opacity: .55; letter-spacing: .05em; text-align: right; }
+  @media (max-width: 760px) { #tip { display: none; } }
+  #label { position: fixed; left: 50%; top: 24px; transform: translateX(-50%); font-size: 13px; letter-spacing: .2em; opacity: .75; text-shadow: 0 0 12px #000; pointer-events: none; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="label">SOLAR SYSTEM · USS EXPLORER</div>
+<div id="hud">
+  <button id="chase" class="on">우주선 추적</button>
+  <button id="side">측면 시점</button>
+  <button id="free">자유 시점</button>
+  <button id="speed">속도 ×1</button>
+</div>
+<div id="tip">자유 시점: 드래그 회전 · 휠 확대/축소 &nbsp;|&nbsp; 1·2·3 시점 전환</div>
+<script type="module" src="space.js"></script>
+</body>
+</html>
