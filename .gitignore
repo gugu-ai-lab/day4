@@ -11,3 +11,5 @@
 !transformer.js
 !jeju-auth/
 !jeju-auth/**
+!api/
+!api/**

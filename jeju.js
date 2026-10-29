@@ -176,12 +176,16 @@ function lighthouse() {
 const SPOTS = [
   { name: '제주국제공항', lon: 126.493, lat: 33.507, desc: '여행의 시작. 비행기에서 내려다본 제주 북쪽 해안선이 펼쳐집니다.', tag: '출발', color: 0xff7aa8 },
   { name: '협재해변', lon: 126.239, lat: 33.394, desc: '에메랄드빛 얕은 바다와 하얀 모래, 멀리 비양도가 보이는 서쪽 대표 해변입니다.', tag: '서쪽 해안', color: 0x4fc3f7 },
-  { name: '용머리해안', lon: 126.311, lat: 33.231, desc: '용이 바다로 머리를 내미는 모양의 퇴적암 절벽 해안입니다.', tag: '남서쪽', color: 0xffb74d },
-  { name: '천지연폭포', lon: 126.553, lat: 33.246, desc: '서귀포 시내에 있는 울창한 숲 속의 폭포입니다.', tag: '서귀포', color: 0x66d9a0 },
+  { name: '용머리해안', lon: 126.311, lat: 33.231, desc: '용이 바다로 머리를 내미는 모양의 퇴적암 절벽 해안입니다.', tag: '남서쪽', color: 0xffb74d, key: '산방산_용머리' },
+  { name: '천지연폭포', lon: 126.553, lat: 33.246, desc: '서귀포 시내에 있는 울창한 숲 속의 폭포입니다.', tag: '서귀포', color: 0x66d9a0, key: '천지연폭포' },
   { name: '한라산 백록담', lon: 126.533, lat: 33.362, desc: '해발 1,947m, 남한에서 가장 높은 산입니다. 정상에는 화산 분화구 백록담이 있습니다.', tag: '중앙', color: 0xff8a65 },
   { name: '섭지코지', lon: 126.931, lat: 33.424, desc: '바다로 길게 뻗은 초원 곶. 붉은 화산송이 지형과 등대가 어우러집니다.', tag: '동남쪽', color: 0xba68c8 },
   { name: '성산일출봉', lon: 126.942, lat: 33.458, desc: '바다 위로 솟은 분화구형 화산체. 일출 명소이며 유네스코 세계유산입니다.', tag: '동쪽', color: 0xffd54f },
   { name: '우도', lon: 126.953, lat: 33.506, desc: '성산 앞바다의 작은 섬. 해안 드라이브와 땅콩 아이스크림으로 유명합니다.', tag: '부속 섬', color: 0x7986cb },
+  { name: '정방폭포', lon: 126.5716, lat: 33.2447, desc: '바다로 직접 떨어지는 동양 유일의 해안 폭포입니다.', tag: '서귀포', color: 0x4dd0e1, key: '정방폭포' },
+  { name: '천제연폭포', lon: 126.4166, lat: 33.2530, desc: '중문 관광단지 옆, 세 단계로 흘러내리는 계곡 폭포입니다.', tag: '중문', color: 0x81c784, key: '천제연폭포' },
+  { name: '중문대포 주상절리대', lon: 126.4252, lat: 33.2378, desc: '용암이 식으며 만든 육각 기둥이 해안을 따라 늘어선 명소입니다.', tag: '중문', color: 0xe57373, key: '중문대포 주상절리대' },
+  { name: '감귤박물관', lon: 126.608, lat: 33.286, desc: '제주 감귤의 역사와 재배 문화를 보여주는 박물관과 감귤 농원입니다.', tag: '감귤재배지', color: 0xffa726, key: '감귤박물관' },
 ];
 for (const s of SPOTS) Object.assign(s, place(s.lon, s.lat));
 // props around the spots
@@ -191,6 +195,8 @@ add(lighthouse(), { x: SPOTS[5].x + 2.5, z: SPOTS[5].z - 1, h: elevation(SPOTS[5
 for (const [lo, la, r] of [[126.80, 33.39, 0.5], [126.775, 33.378, 1.8], [126.82, 33.405, -0.7], [126.35, 33.45, 0.3], [126.64, 33.30, 2.2]]) add(house(), place(lo, la), 1.0, r);
 for (const [lo, la, r] of [[126.76, 33.43, 0.4], [126.745, 33.425, 1.7], [126.78, 33.44, -0.9], [126.42, 33.40, 0.2]]) add(horse(), place(lo, la), 1.0, r);
 for (const [lo, la] of [[126.80, 33.545], [126.76, 33.548], [126.72, 33.545], [126.86, 33.53], [126.9, 33.51], [126.68, 33.54]]) { const p = place(lo, la); add(turbine(), p, 1.0, -0.4); }
+// 관람객 데이터가 있는 관광지만 핀·버튼·투어에 남긴다 (위 장식은 원래 좌표를 그대로 사용)
+{ const keep = SPOTS.filter((s) => s.key).sort((a, b) => a.lon - b.lon); SPOTS.splice(0, SPOTS.length, ...keep); }
 // clouds
 const clouds = [];
 for (let i = 0; i < 11; i++) {
@@ -239,16 +245,66 @@ const spotsEl = $('spots'), card = $('card'), tourBtn = $('tour');
 SPOTS.forEach((s, i) => { const b = document.createElement('button'); b.className = 'glass'; b.textContent = s.name; b.onclick = () => { auto = true; flyTo(i); updateBtn(); }; spotsEl.appendChild(b); s.btn = b; });
 function showCard(i) {
   const s = SPOTS[i]; card.classList.add('hide');
-  setTimeout(() => { card.querySelector('h2').textContent = s.name; card.querySelector('p').textContent = s.desc; card.querySelector('small').textContent = `${i + 1} / ${SPOTS.length} · ${s.tag}`; card.classList.remove('hide'); }, 350);
+  setTimeout(() => { card.querySelector('h2').textContent = s.name; card.querySelector('p').textContent = s.desc; card.querySelector('small').textContent = `${i + 1} / ${SPOTS.length} · ${s.tag}`; $('chart').innerHTML = chartHTML(s); card.classList.remove('hide'); }, 350);
+  SPOTS.forEach((o, k) => { if (o.bars) o.bars.userData.target = k === i ? 1 : 0; });
   SPOTS.forEach((o, k) => o.btn.classList.toggle('on', k === i));
 }
 function updateBtn() { tourBtn.textContent = auto ? '⏸ 여행 일시정지' : '▶ 여행 이어가기'; }
 
+// ================================================================ visitors data (/api/visitors → 서귀포시 직영관광지 관람객수, 공공데이터포털)
+let VIS = null;
+const fmt = (n) => n.toLocaleString('ko-KR'), fmtK = (v) => v >= 10000 ? (v / 10000).toFixed(v >= 100000 ? 0 : 1) + '만' : String(Math.round(v));
+const hex = (c) => '#' + c.toString(16).padStart(6, '0');
+const byYear = (key) => { const o = {}; for (const r of VIS) (o[r['기준연도']] ??= Array(12).fill(null))[r['기준월'] - 1] = r[key]; return o; };
+function chartHTML(s) {
+  if (!VIS || !s.key) return '';
+  const ser = byYear(s.key), yrs = Object.keys(ser).sort(), W = 380, H = 112, L = 34, B = 18, T = 8;
+  const max = Math.max(...yrs.flatMap((y) => ser[y]).filter((v) => v != null)) * 1.08;
+  const X = (m) => L + (W - L - 8) * m / 11, Y = (v) => T + (H - T - B) * (1 - v / max);
+  const cols = ['#9aa7b4', hex(s.color)];
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${s.name} 월별 관람객 추이">`;
+  for (const f of [0, 0.5, 1]) { const v = max / 1.08 * f; svg += `<line x1="${L}" x2="${W - 8}" y1="${Y(v)}" y2="${Y(v)}" stroke="#243447" stroke-opacity=".12"/><text x="${L - 4}" y="${Y(v) + 3}" text-anchor="end" font-size="9" fill="#243447" opacity=".6">${fmtK(v)}</text>`; }
+  for (let m = 0; m < 12; m += 3) svg += `<text x="${X(m)}" y="${H - 4}" text-anchor="middle" font-size="9" fill="#243447" opacity=".6">${m + 1}월</text>`;
+  yrs.forEach((y, k) => {
+    const pts = ser[y].map((v, m) => v == null ? null : [X(m), Y(v)]).filter(Boolean), c = cols[Math.min(k, 1)];
+    svg += `<polyline fill="none" stroke="${c}" stroke-width="2.2" stroke-linejoin="round" points="${pts.map((p) => p.join(',')).join(' ')}"/>` + pts.map((p) => `<circle cx="${p[0]}" cy="${p[1]}" r="2.4" fill="${c}"/>`).join('');
+  });
+  svg += '</svg>';
+  const last = yrs[yrs.length - 1], prev = yrs[yrs.length - 2], n = ser[last].filter((v) => v != null).length;
+  const sum = (a, k = 12) => a.slice(0, k).reduce((t, v) => t + (v || 0), 0);
+  const rows = [];
+  if (prev) rows.push([`${prev}년 전체`, sum(ser[prev]), cols[0]], [`${prev}년 1~${n}월`, sum(ser[prev], n), cols[0]]);
+  rows.push([`${last}년 1~${n}월`, sum(ser[last], n), cols[1]]);
+  const top = Math.max(...rows.map((r) => r[1]));
+  const bars = rows.map(([lb, v, c]) => `<div class="yr"><span>${lb}</span><i style="width:${Math.max(2, v / top * 100)}%;background:${c}"></i><b>${fmt(v)}명</b></div>`).join('');
+  const d = prev ? (rows[2][1] / rows[1][1] - 1) * 100 : null;
+  const legend = yrs.map((y, k) => `<em style="color:${cols[Math.min(k, 1)]}">● ${y}</em>`).join(' ');
+  return `<div class="ct"><div class="ch">월별 관람객 ${legend}</div>${svg}<div class="ch">연도별 합계${d == null ? '' : ` · 전년 동기 대비 <strong>${d >= 0 ? '+' : ''}${d.toFixed(1)}%</strong>`}</div>${bars}<small class="src">자료: 서귀포시 직영관광지 관람객수 (공공데이터포털)</small></div>`;
+}
+// 3D: 월별 관람객 수를 높이로 한 원형 막대 (최근 연도는 진하게)
+function buildBars(s) {
+  if (!VIS || !s.key || s.bars) return;
+  const g = new THREE.Group(), n = VIS.length, vmax = Math.max(...VIS.map((r) => r[s.key])), lastY = VIS[n - 1]['기준연도'], R = 3.8;
+  const disc = mesh(new THREE.CylinderGeometry(R + 1.1, R + 1.4, 1.8, 40), 0xf6f3ee); disc.position.y = -0.8; g.add(disc);
+  VIS.forEach((r, k) => {
+    const a = k / n * Math.PI * 2, geo = new THREE.BoxGeometry(0.75, 1, 0.75); geo.translate(0, 0.5, 0);
+    const col = new THREE.Color(s.color); if (r['기준연도'] !== lastY) col.offsetHSL(0, -0.25, 0.14);
+    const b = new THREE.Mesh(geo, std(col, { roughness: 0.45 })); b.castShadow = true;
+    b.position.set(Math.cos(a) * R, 0.1, Math.sin(a) * R); b.rotation.y = -a; b.userData.h = Math.max(0.15, r[s.key] / vmax * 7); b.scale.y = 0.001; g.add(b);
+  });
+  g.position.set(s.x, s.h, s.z); g.userData = { cur: 0, target: 0 }; g.visible = false; scene.add(g); s.bars = g;
+}
+fetch('api/visitors').then((r) => r.ok ? r.json() : Promise.reject(r.status)).then((j) => {
+  VIS = (j.data || []).sort((a, b) => a['기준연도'] - b['기준연도'] || a['기준월'] - b['기준월']);
+  if (!VIS.length) { VIS = null; return; }
+  SPOTS.forEach(buildBars); showCard(idx);
+}).catch((e) => console.warn('관람객 데이터를 불러오지 못했습니다:', e));
+
 // ================================================================ tour
 const look = new THREE.Vector3(), fromPos = new THREE.Vector3(), fromLook = new THREE.Vector3();
 let idx = 0, phase = 'fly', tp = 0, ang = 0.9, auto = true;
-const FLY = 5.5, HOVER = 7.5;
-const poseOf = (i, a) => { const s = SPOTS[i], big = i === 4, r = big ? 46 : 20, h = big ? 26 : 11; return { pos: new THREE.Vector3(s.x + Math.cos(a) * r, s.h + h, s.z + Math.sin(a) * r), look: new THREE.Vector3(s.x, s.h + 1.2, s.z) }; };
+const FLY = 5.5, HOVER = 10;
+const poseOf = (i, a) => { const s = SPOTS[i], r = 20, h = 11; return { pos: new THREE.Vector3(s.x + Math.cos(a) * r, s.h + h, s.z + Math.sin(a) * r), look: new THREE.Vector3(s.x, s.h + 1.2, s.z) }; };
 function flyTo(i) { idx = i; phase = 'fly'; tp = 0; ang = 0.9; fromPos.copy(camera.position); fromLook.copy(look); controls.enabled = false; showCard(i); }
 tourBtn.onclick = () => { auto = !auto; if (auto) flyTo(idx); else { controls.enabled = true; controls.target.copy(look); } updateBtn(); };
 controls.addEventListener('start', () => { if (auto) { auto = false; updateBtn(); } });
@@ -273,7 +329,12 @@ renderer.setAnimationLoop(() => {
     d.d.rotation.set(0, -a - Math.PI / 2 + Math.PI, 0); d.d.rotateZ(ph < 0.4 ? (ph < 0.2 ? 0.6 : -0.6) : 0);
     d.d.visible = jump > 0.02;
   }
-  SPOTS.forEach((s, i) => { s.ball.position.y = 2.3 + Math.sin(t * 2 + i) * 0.18; });
+  SPOTS.forEach((s, i) => {
+    s.ball.position.y = 2.3 + Math.sin(t * 2 + i) * 0.18;
+    const g = s.bars; if (!g) return;
+    const u = g.userData; u.cur += (u.target - u.cur) * Math.min(1, dt * 2.5); g.visible = u.cur > 0.01;
+    if (g.visible) g.children.forEach((b, k) => { if (b.userData.h) b.scale.y = Math.max(0.001, b.userData.h * ease(Math.min(1, Math.max(0, u.cur * 1.6 - k / g.children.length * 0.6)))); });
+  });
 
   if (auto) {
     tp += dt;

@@ -16,11 +16,17 @@
   #spots button, #tour { all: unset; cursor: pointer; padding: 7px 12px; border-radius: 14px; font-size: 13px; text-align: center; color: #243447; }
   #spots button:hover { background: #fff; }
   #spots button.on { background: #ff9a5c; color: #fff; }
-  #card { position: fixed; left: 16px; bottom: 76px; max-width: min(420px, calc(100% - 32px)); padding: 14px 18px; border-radius: 20px; transition: opacity .6s, transform .6s; }
+  #card { z-index: 3; position: fixed; left: 16px; bottom: 76px; max-width: min(420px, calc(100% - 32px)); padding: 14px 18px; border-radius: 20px; transition: opacity .6s, transform .6s; }
   #card.hide { opacity: 0; transform: translateY(8px); }
   #card h2 { margin: 0 0 4px; font-size: 20px; font-weight: 700; }
   #card p { margin: 0; font-size: 14px; line-height: 1.55; opacity: .85; }
   #card small { display: block; margin-top: 6px; opacity: .55; font-size: 12px; }
+  #chart .ct { margin-top: 10px; font-size: 12px; }
+  #chart .ch { margin: 6px 0 2px; font-weight: 600; opacity: .85; } #chart em { font-style: normal; margin-left: 6px; font-weight: 500; }
+  #chart svg { width: 100%; height: auto; display: block; }
+  #chart .yr { display: grid; grid-template-columns: 92px 1fr 92px; gap: 6px; align-items: center; margin: 2px 0; }
+  #chart .yr i { display: block; height: 8px; border-radius: 4px; } #chart .yr b { font-weight: 600; text-align: right; }
+  #card small.src { margin-top: 6px; }
   #bar { position: fixed; left: 16px; bottom: 16px; display: flex; gap: 10px; align-items: center; }
   #tour { padding: 10px 20px; border-radius: 999px; font-size: 14px; font-weight: 600; background: #ff9a5c; color: #fff; box-shadow: 0 6px 20px rgba(255,140,70,.4); }
   #hint { font-size: 12px; opacity: .6; }
@@ -39,7 +45,7 @@
 <div id="loading">제주도로 떠나는 중…</div>
 <div id="top"><a class="glass" href="index.html">← 처음으로</a><h1>제주도 여행</h1></div>
 <div id="spots"></div>
-<div id="card" class="glass hide"><h2></h2><p></p><small></small></div>
+<div id="card" class="glass hide"><h2></h2><p></p><div id="chart"></div><small></small></div>
 <div id="bar"><button id="tour" class="glass">⏸ 여행 일시정지</button><span id="hint">드래그해서 직접 둘러보고, 버튼으로 여행을 이어가세요</span></div>
 <script type="module" src="jeju.js"></script>
 </body>
