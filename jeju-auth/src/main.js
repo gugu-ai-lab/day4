@@ -22,7 +22,7 @@ function layout(body) {
   return `
     <header class="top">
       <a href="/" data-link class="logo">🍊 제주 IP 클럽</a>
-      <nav><a href="/shop" data-link>상점</a>${nav}</nav>
+      <nav><a href="/shop" data-link>상점</a><a href="/jeju.html">제주 여행</a>${nav}</nav>
     </header>
     ${configured ? '' : '<div class="warn">⚠ Supabase 환경변수(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)가 설정되지 않았어요. README를 확인하세요.</div>'}
     <main>${body}</main>

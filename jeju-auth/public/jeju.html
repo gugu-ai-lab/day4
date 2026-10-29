@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>제주도 여행</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; color: #243447; font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+               background: radial-gradient(ellipse at 50% 35%, #f4f2ee 0%, #dcdfe1 60%, #c4c9ce 100%); }
+  canvas { display: block; }
+  .glass { background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.9); box-shadow: 0 6px 24px rgba(40,60,80,.14); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  #top { position: fixed; left: 16px; top: 14px; display: flex; gap: 10px; align-items: center; }
+  #top a { color: #243447; text-decoration: none; padding: 7px 14px; border-radius: 999px; font-size: 13px; }
+  #top h1 { margin: 0; font-weight: 600; font-size: 18px; letter-spacing: .08em; }
+  #spots { position: fixed; right: 14px; top: 14px; display: flex; flex-direction: column; gap: 6px; max-width: 150px; }
+  #spots button, #tour { all: unset; cursor: pointer; padding: 7px 12px; border-radius: 14px; font-size: 13px; text-align: center; color: #243447; }
+  #spots button:hover { background: #fff; }
+  #spots button.on { background: #ff9a5c; color: #fff; }
+  #card { z-index: 3; position: fixed; left: 16px; bottom: 76px; max-width: min(420px, calc(100% - 32px)); padding: 14px 18px; border-radius: 20px; transition: opacity .6s, transform .6s; }
+  #card.hide { opacity: 0; transform: translateY(8px); }
+  #card h2 { margin: 0 0 4px; font-size: 20px; font-weight: 700; }
+  #card p { margin: 0; font-size: 14px; line-height: 1.55; opacity: .85; }
+  #card small { display: block; margin-top: 6px; opacity: .55; font-size: 12px; }
+  #chart .ct { margin-top: 10px; font-size: 12px; }
+  #chart .ch { margin: 6px 0 2px; font-weight: 600; opacity: .85; } #chart em { font-style: normal; margin-left: 6px; font-weight: 500; }
+  #chart svg { width: 100%; height: auto; display: block; }
+  #chart .yr { display: grid; grid-template-columns: 92px 1fr 92px; gap: 6px; align-items: center; margin: 2px 0; }
+  #chart .yr i { display: block; height: 8px; border-radius: 4px; } #chart .yr b { font-weight: 600; text-align: right; }
+  #card small.src { margin-top: 6px; }
+  #bar { position: fixed; left: 16px; bottom: 16px; display: flex; gap: 10px; align-items: center; }
+  #tour { padding: 10px 20px; border-radius: 999px; font-size: 14px; font-weight: 600; background: #ff9a5c; color: #fff; box-shadow: 0 6px 20px rgba(255,140,70,.4); }
+  #hint { font-size: 12px; opacity: .6; }
+  .label { color: #243447; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.92); box-shadow: 0 3px 10px rgba(40,60,80,.2); white-space: nowrap; pointer-events: none; transform: translateY(-22px); }
+  #loading { position: fixed; inset: 0; display: grid; place-items: center; background: #e8e8e6; letter-spacing: .1em; font-size: 14px; transition: opacity .8s; z-index: 5; }
+  @media (max-width: 640px) { #spots { flex-direction: row; flex-wrap: wrap; max-width: none; left: 14px; right: 14px; top: 56px; } #hint { display: none; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="loading">제주도로 떠나는 중…</div>
+<div id="top"><a class="glass" href="/">← 처음으로</a><h1>제주도 여행</h1></div>
+<div id="spots"></div>
+<div id="card" class="glass hide"><h2></h2><p></p><div id="chart"></div><small></small></div>
+<div id="bar"><button id="tour" class="glass">⏸ 여행 일시정지</button><span id="hint">드래그해서 직접 둘러보고, 버튼으로 여행을 이어가세요</span></div>
+<script type="module" src="jeju.js"></script>
+</body>
+</html>
