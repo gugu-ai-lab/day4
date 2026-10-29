@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/fetch-pixabay.mjs || echo 'skip image fetch'",
     "build": "vite build",
     "preview": "vite preview",
     "fetch-images": "node scripts/fetch-pixabay.mjs"
