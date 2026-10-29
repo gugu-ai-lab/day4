@@ -5,26 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>제주도 여행</title>
 <style>
-  html, body { margin: 0; height: 100%; background: #0a2a40; overflow: hidden; color: #fff; font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; }
+  html, body { margin: 0; height: 100%; overflow: hidden; color: #243447; font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+               background: radial-gradient(ellipse at 50% 35%, #f4f2ee 0%, #dcdfe1 60%, #c4c9ce 100%); }
   canvas { display: block; }
-  .glass { background: rgba(8,28,44,.58); border: 1px solid rgba(255,255,255,.16); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .glass { background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.9); box-shadow: 0 6px 24px rgba(40,60,80,.14); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
   #top { position: fixed; left: 16px; top: 14px; display: flex; gap: 10px; align-items: center; }
-  #top a { color: #fff; text-decoration: none; padding: 7px 14px; border-radius: 999px; font-size: 13px; }
-  #top h1 { margin: 0; font-weight: 300; font-size: 18px; letter-spacing: .16em; text-shadow: 0 1px 10px rgba(0,0,0,.5); }
+  #top a { color: #243447; text-decoration: none; padding: 7px 14px; border-radius: 999px; font-size: 13px; }
+  #top h1 { margin: 0; font-weight: 600; font-size: 18px; letter-spacing: .08em; }
   #spots { position: fixed; right: 14px; top: 14px; display: flex; flex-direction: column; gap: 6px; max-width: 150px; }
-  #spots button, #tour { all: unset; cursor: pointer; padding: 7px 12px; border-radius: 12px; font-size: 13px; text-align: center; }
-  #spots button:hover, #tour:hover { background: rgba(60,130,180,.55); }
-  #spots button.on { background: rgba(255,150,70,.45); border-color: rgba(255,180,110,.7); }
-  #card { position: fixed; left: 16px; bottom: 76px; max-width: min(420px, calc(100% - 32px)); padding: 14px 18px; border-radius: 16px; transition: opacity .6s, transform .6s; }
+  #spots button, #tour { all: unset; cursor: pointer; padding: 7px 12px; border-radius: 14px; font-size: 13px; text-align: center; color: #243447; }
+  #spots button:hover { background: #fff; }
+  #spots button.on { background: #ff9a5c; color: #fff; }
+  #card { position: fixed; left: 16px; bottom: 76px; max-width: min(420px, calc(100% - 32px)); padding: 14px 18px; border-radius: 20px; transition: opacity .6s, transform .6s; }
   #card.hide { opacity: 0; transform: translateY(8px); }
-  #card h2 { margin: 0 0 4px; font-size: 20px; font-weight: 500; }
-  #card p { margin: 0; font-size: 14px; line-height: 1.55; opacity: .88; }
+  #card h2 { margin: 0 0 4px; font-size: 20px; font-weight: 700; }
+  #card p { margin: 0; font-size: 14px; line-height: 1.55; opacity: .85; }
   #card small { display: block; margin-top: 6px; opacity: .55; font-size: 12px; }
   #bar { position: fixed; left: 16px; bottom: 16px; display: flex; gap: 10px; align-items: center; }
-  #tour { padding: 10px 20px; border-radius: 999px; font-size: 14px; background: linear-gradient(135deg, #ff9a44, #e2527a); border: none; }
-  #hint { font-size: 12px; opacity: .65; }
-  .label { color: #fff; font-size: 13px; padding: 3px 9px; border-radius: 999px; background: rgba(8,28,44,.6); border: 1px solid rgba(255,255,255,.25); white-space: nowrap; pointer-events: none; transform: translateY(-26px); }
-  #loading { position: fixed; inset: 0; display: grid; place-items: center; background: #0a2a40; letter-spacing: .1em; font-size: 14px; transition: opacity .8s; }
+  #tour { padding: 10px 20px; border-radius: 999px; font-size: 14px; font-weight: 600; background: #ff9a5c; color: #fff; box-shadow: 0 6px 20px rgba(255,140,70,.4); }
+  #hint { font-size: 12px; opacity: .6; }
+  .label { color: #243447; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(255,255,255,.92); box-shadow: 0 3px 10px rgba(40,60,80,.2); white-space: nowrap; pointer-events: none; transform: translateY(-22px); }
+  #loading { position: fixed; inset: 0; display: grid; place-items: center; background: #e8e8e6; letter-spacing: .1em; font-size: 14px; transition: opacity .8s; z-index: 5; }
   @media (max-width: 640px) { #spots { flex-direction: row; flex-wrap: wrap; max-width: none; left: 14px; right: 14px; top: 56px; } #hint { display: none; } }
 </style>
 <script type="importmap">
