@@ -1,7 +1,8 @@
 import { supabase, configured } from './supabase.js'
+import { esc } from './util.js'
+import { shop, cart } from './shop.js'
 
-export const esc = (s = '') =>
-  String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
+export { esc }
 
 const ERRORS = {
   'Invalid login credentials': '이메일 또는 비밀번호가 올바르지 않아요.',
@@ -50,7 +51,7 @@ const home = {
         <p class="lead">돌하르방부터 감귤까지, 제주를 대표하는 캐릭터와 풍경을 모아둔 팬 클럽이에요.</p>
         <div class="cta">${
           session
-            ? '<a class="btn big" href="/my" data-link>내 정보 보기</a>'
+            ? '<a class="btn big" href="/shop" data-link>굿즈 상점 가기</a><a class="btn big ghost" href="/my" data-link>내 정보 보기</a>'
             : '<a class="btn big" href="/signup" data-link>클럽 가입하기</a><a class="btn big ghost" href="/login" data-link>로그인</a>'
         }</div>
       </div>
@@ -171,4 +172,4 @@ const my = {
   },
 }
 
-export const pages = { '/': home, '/signup': signup, '/login': login, '/my': my }
+export const pages = { '/': home, '/signup': signup, '/login': login, '/my': my, '/shop': shop, '/cart': cart }

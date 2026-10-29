@@ -1,6 +1,7 @@
 import './style.css'
 import { supabase, configured } from './supabase.js'
 import { pages, esc } from './pages.js'
+import { getCount, updateBadge, refreshCount } from './cart.js'
 
 const app = document.getElementById('app')
 const state = { session: null }
@@ -16,12 +17,12 @@ function layout(body) {
   const user = state.session?.user
   const nick = user?.user_metadata?.nickname || user?.email?.split('@')[0]
   const nav = user
-    ? `<a href="/my" data-link>🍊 ${esc(nick)}</a><button id="logout" class="btn ghost">로그아웃</button>`
+    ? `<a href="/cart" data-link class="cart">🛒 <b id="cartCount">${getCount()}</b></a><a href="/my" data-link>🍊 ${esc(nick)}</a><button id="logout" class="btn ghost">로그아웃</button>`
     : `<a href="/login" data-link>로그인</a><a href="/signup" data-link class="btn">회원가입</a>`
   return `
     <header class="top">
       <a href="/" data-link class="logo">🍊 제주 IP 클럽</a>
-      <nav>${nav}</nav>
+      <nav><a href="/shop" data-link>상점</a>${nav}</nav>
     </header>
     ${configured ? '' : '<div class="warn">⚠ Supabase 환경변수(VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)가 설정되지 않았어요. README를 확인하세요.</div>'}
     <main>${body}</main>
@@ -41,6 +42,8 @@ function render() {
   document.getElementById('logout')?.addEventListener('click', async () => {
     await supabase.auth.signOut()
   })
+  if (loggedIn) refreshCount()
+  else updateBadge(0)
   page.mount?.(app, { state, navigate })
 }
 
