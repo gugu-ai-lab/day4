@@ -1,0 +1,63 @@
+// Pixabay API로 제주 관련 이미지를 받아 public/images 에 저장한다.
+// 사용: PIXABAY_API_KEY=... npm run fetch-images  (또는 .env 에 PIXABAY_API_KEY 작성)
+import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+
+const root = join(dirname(fileURLToPath(import.meta.url)), '..')
+
+function loadEnv() {
+  const file = join(root, '.env')
+  if (!existsSync(file)) return
+  for (const line of readFileSync(file, 'utf8').split('\n')) {
+    const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/)
+    if (m && !(m[1] in process.env)) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '')
+  }
+}
+loadEnv()
+
+const key = process.env.PIXABAY_API_KEY
+if (!key) {
+  console.error('PIXABAY_API_KEY 가 없습니다. .env 에 추가하거나 환경변수로 전달하세요.')
+  process.exit(1)
+}
+
+// 파일명 -> 검색어 (결과가 없으면 fallback 검색어 사용)
+const targets = [
+  { file: 'hero', q: 'jeju island', alt: 'korea island coast' },
+  { file: 'hareubang', q: 'dol hareubang', alt: 'jeju stone statue' },
+  { file: 'mikan', q: 'tangerine orchard', alt: 'mandarin orange' },
+  { file: 'hallasan', q: 'hallasan', alt: 'jeju mountain' },
+  { file: 'sunrise', q: 'seongsan ilchulbong', alt: 'jeju sunrise' },
+  { file: 'canola', q: 'jeju canola flowers', alt: 'rapeseed field spring' },
+]
+
+const outDir = join(root, 'public', 'images')
+mkdirSync(outDir, { recursive: true })
+const credits = {}
+
+async function search(q) {
+  const url = new URL('https://pixabay.com/api/')
+  url.search = new URLSearchParams({
+    key, q, image_type: 'photo', orientation: 'horizontal',
+    safesearch: 'true', order: 'popular', per_page: '5',
+  })
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Pixabay API ${res.status}: ${await res.text()}`)
+  return (await res.json()).hits
+}
+
+for (const t of targets) {
+  let hits = await search(t.q)
+  if (!hits.length) hits = await search(t.alt)
+  const hit = hits[0]
+  if (!hit) { console.warn(`✗ ${t.file}: 결과 없음`); continue }
+  const img = await fetch(hit.largeImageURL)
+  if (!img.ok) { console.warn(`✗ ${t.file}: 다운로드 실패`); continue }
+  writeFileSync(join(outDir, `${t.file}.jpg`), Buffer.from(await img.arrayBuffer()))
+  credits[t.file] = { user: hit.user, page: hit.pageURL }
+  console.log(`✓ ${t.file}.jpg  (${t.q} · by ${hit.user})`)
+}
+
+writeFileSync(join(outDir, 'credits.json'), JSON.stringify(credits, null, 2))
+console.log('완료: public/images/')
