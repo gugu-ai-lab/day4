@@ -211,8 +211,8 @@ renderer.setAnimationLoop(() => {
   // ship along the path
   u = (u + dt * 7 * speedMul / PATH_LEN) % 1;
   path.getPointAt(u, ship.position); path.getTangentAt(u, fwd);
-  m4.lookAt(ship.position, tmp.copy(ship.position).add(fwd), up);    // lookAt aims +Z at target; ship nose is -Z, so flip
-  q.setFromRotationMatrix(m4); q.multiply(new THREE.Quaternion().setFromAxisAngle(up, Math.PI));
+  m4.lookAt(ship.position, tmp.copy(ship.position).add(fwd), up);    // Matrix4.lookAt points -Z at the target, same as the ship nose
+  q.setFromRotationMatrix(m4);
   const turn = fwd.clone().cross(prevFwd).y * 60; prevFwd.copy(fwd);
   bank.v += (Math.max(-.6, Math.min(.6, -turn)) - bank.v) * Math.min(1, dt * 3);
   ship.quaternion.copy(q); ship.rotateZ(bank.v);
